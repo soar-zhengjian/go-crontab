@@ -4,10 +4,10 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"go.etcd.io/etcd/clientv3"
-	"time"
+"context"
+"fmt"
+"go.etcd.io/etcd/clientv3"
+"time"
 )
 
 var (
@@ -33,6 +33,7 @@ func main() {
 	//用于读写etcd的键值对
 	kv = clientv3.NewKV(client)
 
+	//kv.Put 带clientv3.WithPrevKV() 获取前一个Value
 	if putResp, err = kv.Put(context.TODO(), "/cron/jobs/job1", "bye", clientv3.WithPrevKV()); err != nil {
 		fmt.Println(err)
 	} else {
@@ -42,5 +43,4 @@ func main() {
 		}
 	}
 }
-
 ```
