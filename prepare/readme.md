@@ -5,3 +5,5 @@
 - 3-3   cron
 - 4-3   etcd
 - 4-4   etcdPut
+- 4-5   etcdGet
+- 4-6   etcdAll
