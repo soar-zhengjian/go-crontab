@@ -7,3 +7,4 @@
 - 4-4   etcdPut
 - 4-5   etcdGet
 - 4-6   etcdAll
+- 4-7   etcdDel
