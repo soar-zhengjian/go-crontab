@@ -3,3 +3,5 @@
 - 2-4   killShell
 - 3-2   cronExpr
 - 3-3   cron
+- 4-3   etcd
+- 4-4   etcdPut

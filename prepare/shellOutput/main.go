@@ -1,21 +1,22 @@
 package main
 
 import (
-	"os/exec"
 	"fmt"
+	"os/exec"
 )
 
 var (
-	cmd *exec.Cmd
+	cmd    *exec.Cmd
 	output []byte
-	err error
+	err    error
 )
-func main()  {
+
+func main() {
 	//生成Cmd
-	cmd = exec.Command("/bin/bash","-c","sleep 5; ls -l")
+	cmd = exec.Command("/bin/bash", "-c", "sleep 5; ls -l")
 
 	//执行命令，捕获子进程的输出(pipe)
-	if output,err = cmd.CombinedOutput();err != nil{
+	if output, err = cmd.CombinedOutput(); err != nil {
 		fmt.Println(err)
 		return
 	}
