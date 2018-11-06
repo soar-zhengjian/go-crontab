@@ -12,3 +12,8 @@
 - 4-9   etcdWatch
 - 4-10  etcdOp
 - 4-11/12 etcdTxn
+- 5-3   mongo
+- 5-4   mongoInsert
+- 5-5   mongoMulInsert
+- 5-6   mongoFind
+- 5-7   mongoDel
