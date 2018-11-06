@@ -10,3 +10,5 @@
 - 4-7   etcdDel
 - 4-8   etcdLease
 - 4-9   etcdWatch
+- 4-10  etcdOp
+- 4-11/12 etcdTxn
