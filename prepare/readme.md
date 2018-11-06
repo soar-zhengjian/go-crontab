@@ -8,3 +8,5 @@
 - 4-5   etcdGet
 - 4-6   etcdAll
 - 4-7   etcdDel
+- 4-8   etcdLease
+- 4-9   etcdWatch
