@@ -91,7 +91,6 @@ func main()  {
 
 
 	//定义事务
-
 	//如果key不存在
 	txn.If(clientv3.Compare(clientv3.CreateRevision("/cron/lock/job9"),"=",0)).
 		Then(clientv3.OpPut("/cron/lock/job9","xxx123",clientv3.WithLease(leaseId))).
