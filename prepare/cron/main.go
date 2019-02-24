@@ -73,7 +73,8 @@ func main() {
 			// 睡眠100毫秒
 			select {
 			// 将在100毫秒可读，返回
-			case <-time.NewTicker(100 * time.Millisecond).C:
+			case <-time.NewTimer(100 * time.Millisecond).C:
+				fmt.Println("sleep")
 			}
 			// time.Sleep(100*time.Millisecond)
 		}
