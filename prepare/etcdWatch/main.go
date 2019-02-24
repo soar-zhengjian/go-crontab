@@ -22,22 +22,22 @@ var (
 )
 
 func main() {
-	//客户端配置
+	// 客户端配置
 	config = clientv3.Config{
 		Endpoints:   []string{"127.0.0.1:2379"},
 		DialTimeout: 5 * time.Second,
 	}
 
-	//建立连接
+	// 建立连接
 	if client, err = clientv3.New(config); err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	//用于读写etcd的键值对
+	// 用于读写etcd的键值对
 	kv = clientv3.NewKV(client)
 
-	//模拟etcd中的kv的变化
+	// 模拟etcd中的kv的变化
 	go func() {
 		for {
 			kv.Put(context.TODO(), "/cron/jobs/job7", "i am job7")
@@ -46,24 +46,24 @@ func main() {
 		}
 	}()
 
-	//先Get到当前值，并监听后续变化
+	// 先Get到当前值，并监听后续变化
 	if getResp, err = kv.Get(context.TODO(), "/cron/jobs/job7"); err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	//key存在
+	// key存在
 	if len(getResp.Kvs) != 0 {
 		fmt.Println("当前值:", string(getResp.Kvs[0].Value))
 	}
 
-	//当前etcd集群事务ID，单调递增
+	// 当前etcd集群事务ID，单调递增
 	watchStartRevision = getResp.Header.Revision + 1
 
-	//创建一个watcher
+	// 创建一个watcher
 	watcher = clientv3.NewWatcher(client)
 
-	//启动监听
+	// 启动监听
 	fmt.Println("从该版本向后监听:", watchStartRevision)
 
 	ctx, cancelFunc := context.WithCancel(context.TODO())
@@ -73,7 +73,7 @@ func main() {
 
 	watchRespChan = watcher.Watch(ctx, "/cron/jobs/job7", clientv3.WithRev(watchStartRevision))
 
-	//处理kv变化事件
+	// 处理kv变化事件
 	for watchResp = range watchRespChan {
 		for _, event = range watchResp.Events {
 			switch event.Type {

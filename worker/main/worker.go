@@ -2,8 +2,9 @@ package main
 
 import (
 	"flag"
-	"runtime"
 	"go-crontab/common"
+	"go-crontab/worker"
+	"runtime"
 	"time"
 )
 
@@ -12,57 +13,57 @@ var (
 )
 
 //解析命令行参数
-func initArgs()  {
+func initArgs() {
 	//worker -config ./worker.json
 	//worker -h
-	flag.StringVar(&confFile,"config","./worker.json","worker.json")
+	flag.StringVar(&confFile, "config", "./worker.json", "worker.json")
 	flag.Parse()
 }
 
 //初始化线程数量
-func initEnv()  {
+func initEnv() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
 
-func main()  {
+func main() {
 	var (
 		err error
 	)
 
-	//初始化命令行参数
+	// 初始化命令行参数
 	initArgs()
 
-	//初始化线程
+	// 初始化线程
 	initEnv()
 
-	//加载配置
-	if err = worker.InitConfig(confFile); err != nil{
+	// 加载配置
+	if err = worker.InitConfig(confFile); err != nil {
 		common.FmtErr(err)
 	}
 
-	//服务注册
-	if err = worker.InitRegister(); err != nil{
+	// 服务注册
+	if err = worker.InitRegister(); err != nil {
 		common.FmtErr(err)
 	}
 
-	//启动日志协程
-	if err = worker.InitLogSink(); err != nil{
+	// 启动日志协程
+	if err = worker.InitLogSink(); err != nil {
 		common.FmtErr(err)
 	}
 
-	//启动执行器
-	if err = worker.InitLogSink(); err != nil{
+	// 启动执行器
+	if err = worker.InitLogSink(); err != nil {
 		common.FmtErr(err)
 	}
 
-	//初始化任务管理器
-	if err = worker.InitJobMgr(); err != nil{
+	// 初始化任务管理器
+	if err = worker.InitJobMgr(); err != nil {
 		common.FmtErr(err)
 	}
 
-	//正常退出
+	// 正常退出
 	for {
-		time.Sleep(1*time.Second)
+		time.Sleep(1 * time.Second)
 	}
 	return
 }

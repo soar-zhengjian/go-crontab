@@ -21,23 +21,23 @@ func main() {
 		DialTimeout: 5 * time.Second,
 	}
 
-	//建立一个客户端
+	// 建立一个客户端
 	if client, err = clientv3.New(config); err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	//用于读写etcd的键值对
+	// 用于读写etcd的键值对
 	kv = clientv3.NewKV(client)
 
-	//写入另外一个Job
+	// 写入另外一个Job
 	kv.Put(context.TODO(), "/cron/jobs/job2", "{...}")
 
-	//读取/cron/jobs/为前缀的所有key
+	// 读取/cron/jobs/为前缀的所有key
 	if getResp, err = kv.Get(context.TODO(), "/cron/jobs/", clientv3.WithPrefix()); err != nil {
 		fmt.Println(err)
 	} else {
-		//获取成功，遍历所有的kvs
+		// 获取成功，遍历所有的kvs
 		fmt.Println(getResp.Kvs)
 		for k, v := range getResp.Kvs {
 			fmt.Println(k, v)

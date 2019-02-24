@@ -23,13 +23,13 @@ func main() {
 		DialTimeout: 5 * time.Second,
 	}
 
-	//建立一个客户端
+	// 建立一个客户端
 	if client, err = clientv3.New(config); err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	//用于etcd的键值对
+	// 用于etcd的键值对
 	kv = clientv3.NewKV(client)
 
 	if delResp, err = kv.Delete(context.TODO(), "/cron/jobs/job1", clientv3.WithFromKey()); err != nil {

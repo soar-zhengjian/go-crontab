@@ -29,28 +29,28 @@ type TimePoint struct {
 
 // 一条日志
 type LogRecord struct {
-	JobName   string    `bson:"jobName"`   //任务名
-	Command   string    `bson:"command"`   //shell命令
-	Err       string    `bson:"err"`       //脚本错误
-	Content   string    `bson:"content"`   //脚本输出
-	TimePoint TimePoint `bson:"timePoint"` //执行时间点
+	JobName   string    `bson:"jobName"`   // 任务名
+	Command   string    `bson:"command"`   // shell命令
+	Err       string    `bson:"err"`       // 脚本错误
+	Content   string    `bson:"content"`   // 脚本输出
+	TimePoint TimePoint `bson:"timePoint"` // 执行时间点
 
 }
 
 func main() {
-	//1, 建立连接
+	// 1, 建立连接
 	if client, err = mongo.Connect(context.TODO(), "mongodb://127.0.0.1:27017", clientopt.ConnectTimeout(5*time.Second)); err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	//2, 选择数据库cron
+	// 2, 选择数据库cron
 	database = client.Database("cron")
 
-	//3, 选择表log
+	// 3, 选择表log
 	collection = database.Collection("log")
 
-	//4, 插入记录bson
+	// 4, 插入记录bson
 	record = &LogRecord{
 		JobName: "job10",
 		Command: "echo 10",
@@ -62,10 +62,10 @@ func main() {
 		},
 	}
 
-	//5, 批量插入多条document
+	// 5, 批量插入多条document
 	logArr = []interface{}{record, record, record}
 
-	//发起插入
+	// 发起插入
 	if result, err = collection.InsertMany(context.TODO(), logArr); err != nil {
 		fmt.Println(err)
 		return

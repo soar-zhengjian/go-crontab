@@ -17,11 +17,11 @@ type TimePoint struct {
 
 // 一条日志
 type LogRecord struct {
-	JobName   string    `bson:"jobName"`   //任务名
-	Command   string    `bson:"command"`   //shell命令
-	Err       string    `bson:"err"`       //脚本错误
-	Content   string    `bson:"content"`   //脚本输出
-	TimePoint TimePoint `bson:"timePoint"` //执行时间点
+	JobName   string    `bson:"jobName"`   // 任务名
+	Command   string    `bson:"command"`   // shell命令
+	Err       string    `bson:"err"`       // 脚本错误
+	Content   string    `bson:"content"`   // 脚本输出
+	TimePoint TimePoint `bson:"timePoint"` // 执行时间点
 }
 
 var (
@@ -35,19 +35,19 @@ var (
 )
 
 func main() {
-	//1, 建立连接
+	// 1, 建立连接
 	if client, err = mongo.Connect(context.TODO(), "mongodb://127.0.0.1:27017", clientopt.ConnectTimeout(5*time.Second)); err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	//2, 选择数据库my_db
+	// 2, 选择数据库my_db
 	database = client.Database("cron")
 
-	//3, 选择表my_collection
+	// 3, 选择表my_collection
 	collection = database.Collection("log")
 
-	//4, 插入记录(bson)
+	// 4, 插入记录(bson)
 	record = &LogRecord{
 		JobName: "job10",
 		Command: "echo hello",
@@ -64,7 +64,7 @@ func main() {
 		return
 	}
 
-	//_id: 默认生成一个全局唯一ID,ObjectID: 12字节的二进制
+	// id: 默认生成一个全局唯一ID,ObjectID: 12字节的二进制
 	docId = result.InsertedID.(objectid.ObjectID)
 	fmt.Println("自增ID:", docId.Hex())
 }
