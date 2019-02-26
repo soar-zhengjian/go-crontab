@@ -54,7 +54,7 @@ func InitJobMgr() (err error) {
 	return
 }
 
-// 保存任务
+// 保存任务 JOB_SAVE_DIR+name
 func (jobMgr *JobMgr) SaveJob(job *common.Job) (oldJob *common.Job, err error) {
 	// 把任务保存到/cron/jobs/任务名 -> json
 	var (

@@ -56,7 +56,7 @@ func main() {
 	// 输出config 结果
 	logger.Infof("%+v\n", master.G_config)
 
-	// 初始化服务发现模块
+	// 初始化服务发现模块,提供方法给 /worker/list 接口
 	if err = master.InitWorkerMgr(); err != nil {
 		common.FmtErr(err)
 		return
