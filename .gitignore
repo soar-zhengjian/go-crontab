@@ -1,1 +1,3 @@
 .idea
+master/main/logs/*
+worker/main/logs/*

@@ -2,9 +2,14 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"go-crontab/common"
+	"go-crontab/logger"
 	"go-crontab/master"
+	"log"
+	"os"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -24,6 +29,7 @@ func initArgs() {
 func initEnv() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 }
+
 func main() {
 	// 初始化命令行参数
 	initArgs()
@@ -31,31 +37,50 @@ func main() {
 	// 初始化线程
 	initEnv()
 
-	// 加载配置
+	// 日志配置
+	path := "logs"
+	mode := os.ModePerm
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		os.Mkdir(path, mode)
+	}
+	file, _ := os.Create(strings.Join([]string{path, "log.txt"}, "/"))
+	defer file.Close()
+	loger := log.New(file, "", log.Ldate|log.Ltime|log.Lshortfile)
+	logger.SetDefault(loger)
+
+	// 加载config配置
 	if err = master.InitConfig(confFile); err != nil {
 		common.FmtErr(err)
+		return
 	}
+	// 输出config 结果
+	logger.Infof("%+v\n", master.G_config)
 
 	// 初始化服务发现模块
 	if err = master.InitWorkerMgr(); err != nil {
 		common.FmtErr(err)
+		return
 	}
 
-	// 日志管理器
+	// 初始化日志管理器
 	if err = master.InitLogMgr(); err != nil {
 		common.FmtErr(err)
+		return
 	}
 
-	// 任务管理器
+	// 初始化任务管理器
 	if err = master.InitJobMgr(); err != nil {
 		common.FmtErr(err)
+		return
 	}
 
 	// 启动Api Http服务
 	if err = master.InitApiServer(); err != nil {
 		common.FmtErr(err)
+		return
 	}
 
+	fmt.Println("master服务开启成功:\t", master.G_config.ApiPort)
 	// 正常退出
 	for {
 		time.Sleep(1 * time.Second)

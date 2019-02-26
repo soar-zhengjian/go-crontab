@@ -15,7 +15,7 @@ var (
 	G_executor *Executor
 )
 
-// 执行一个任务
+// 执行一个任务, 开启一个goroutine执行任务
 func (executor *Executor) ExecuteJob(info *common.JobExecuteInfo) {
 	go func() {
 		var (

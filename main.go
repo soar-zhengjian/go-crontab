@@ -4,6 +4,6 @@ import (
 	"fmt"
 )
 
-func main()  {
+func main() {
 	fmt.Println(len([]rune("我爱我家")))
 }

@@ -25,7 +25,10 @@ func InitLogMgr() (err error) {
 	)
 
 	// 建立mongodb连接
-	if client, err = mongo.Connect(context.TODO(), G_config.MongodbUri, clientopt.ConnectTimeout(time.Duration(G_config.MongodbConnectTimeout)*time.Millisecond)); err != nil {
+	if client, err = mongo.Connect(
+		context.TODO(),
+		G_config.MongodbUri,
+		clientopt.ConnectTimeout(time.Duration(G_config.MongodbConnectTimeout)*time.Millisecond)); err != nil {
 		return
 	}
 

@@ -67,6 +67,7 @@ func (jobMgr *JobMgr) watchJobs() (err error) {
 						continue
 					}
 					// 构建一个更新Event
+					jobEvent = common.BuildJobEvent(common.JOB_EVENT_SAVE, job)
 				case mvccpb.DELETE:
 					// 任务被删除了
 					// Delete /cron/jobs/job10
@@ -96,9 +97,8 @@ func (JobMgr *JobMgr) watchKiller() {
 		job        *common.Job
 	)
 
-	// 监听/cron/killer目录
+	// 监听协程 监听/cron/killer目录
 	go func() {
-		// 监听协程
 		// 监听/cron/killer/目录的变化
 		watchChan = JobMgr.watcher.Watch(context.TODO(), common.JOB_KILLER_DIR, clientv3.WithPrefix())
 		// 处理监听事件
@@ -109,6 +109,7 @@ func (JobMgr *JobMgr) watchKiller() {
 					jobName = common.ExtractKillerName(string(watchEvent.Kv.Key))
 					job = &common.Job{Name: jobName}
 					jobEvent = common.BuildJobEvent(common.JOB_EVENT_KILL, job)
+					// 事件推送给scheduler
 					G_scheduler.PushJobEvent(jobEvent)
 				case mvccpb.DELETE:
 					// killer标记过期，被自动删除

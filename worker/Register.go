@@ -103,6 +103,7 @@ func (register *Register) keepOnline() {
 	}
 }
 
+// 服务注册，自动续租
 func InitRegister() (err error) {
 	var (
 		config  clientv3.Config

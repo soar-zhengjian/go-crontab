@@ -138,6 +138,8 @@ func BuildJobSchedulePlan(job *Job) (jobSchedulePlan *JobSchedulePlan, err error
 	if expr, err = cronexpr.Parse(job.CronExpr); err != nil {
 		return
 	}
+
+	// 生成任务调度计划对象
 	jobSchedulePlan = &JobSchedulePlan{
 		Job:      job,
 		Expr:     expr,
@@ -151,7 +153,7 @@ func BuildJobExecuteInfo(jobSchedulePlan *JobSchedulePlan) (jobExecuteInfo *JobE
 	jobExecuteInfo = &JobExecuteInfo{
 		Job:      jobSchedulePlan.Job,
 		PlanTime: jobSchedulePlan.NextTime, // 计算调度时间
-		RealTime: time.Now(),
+		RealTime: time.Now(),               // 真实调度时间
 	}
 
 	jobExecuteInfo.CancelCtx, jobExecuteInfo.CancelFunc = context.WithCancel(context.TODO())

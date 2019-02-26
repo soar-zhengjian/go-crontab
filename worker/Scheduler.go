@@ -3,6 +3,7 @@ package worker
 import (
 	"fmt"
 	"go-crontab/common"
+	"go-crontab/logger"
 	"time"
 )
 
@@ -73,7 +74,7 @@ func (scheduler *Scheduler) TryStartJob(jobPlan *common.JobSchedulePlan) {
 	scheduler.jobExecutingTable[jobPlan.Job.Name] = jobExecuteInfo
 
 	// 执行任务
-	fmt.Println("执行任务:", jobExecuteInfo.Job.Name, jobExecuteInfo.PlanTime, jobExecuteInfo.RealTime)
+	logger.Info("执行任务:", jobExecuteInfo.Job.Name, jobExecuteInfo.PlanTime, jobExecuteInfo.RealTime)
 	G_executor.ExecuteJob(jobExecuteInfo)
 }
 
@@ -139,7 +140,7 @@ func (scheduler *Scheduler) handleJobResult(result *common.JobExecuteResult) {
 		}
 		G_logSink.Append(jobLog)
 	}
-	fmt.Println("任务执行完成:", result.ExecuteInfo.Job.Name, string(result.Output), result.Err)
+	logger.Info("任务执行完成:", result.ExecuteInfo.Job.Name, string(result.Output), result.Err)
 }
 
 // 调度协程

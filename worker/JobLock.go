@@ -27,6 +27,7 @@ func InitJobLock(jobName string, kv clientv3.KV, lease clientv3.Lease) (jobLock 
 	return
 }
 
+// 尝试上锁
 func (jobLock *JobLock) TryLock() (err error) {
 	var (
 		leaseGrantResp *clientv3.LeaseGrantResponse
@@ -91,6 +92,7 @@ func (jobLock *JobLock) TryLock() (err error) {
 	if !txnResp.Succeeded {
 		// 锁被占用
 		err = common.ERR_LOCK_ALREADY_REQUIRED
+		goto FAIL
 	}
 
 	// 抢锁成功

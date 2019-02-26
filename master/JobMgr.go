@@ -88,7 +88,7 @@ func (jobMgr *JobMgr) SaveJob(job *common.Job) (oldJob *common.Job, err error) {
 	return
 }
 
-// 删除任务
+// 删除任务 JOB_SAVE_DIR+name
 func (jobMgr *JobMgr) DeleteJob(name string) (oldJob *common.Job, err error) {
 	var (
 		jobKey    string
@@ -116,7 +116,7 @@ func (jobMgr *JobMgr) DeleteJob(name string) (oldJob *common.Job, err error) {
 	return
 }
 
-// 列举任务
+// 列举任务 JOB_SAVE_DIR+*
 func (jobMgr *JobMgr) ListJobs() (jobList []*common.Job, err error) {
 	var (
 		dirKey  string
@@ -129,7 +129,7 @@ func (jobMgr *JobMgr) ListJobs() (jobList []*common.Job, err error) {
 	dirKey = common.JOB_SAVE_DIR
 
 	// 获取目录下所有的任务信息
-	if getResp, err = jobMgr.kv.Get(context.TODO(), dirKey, clientv3.WithPrevKV()); err != nil {
+	if getResp, err = jobMgr.kv.Get(context.TODO(), dirKey, clientv3.WithPrefix()); err != nil {
 		return
 	}
 
@@ -148,7 +148,7 @@ func (jobMgr *JobMgr) ListJobs() (jobList []*common.Job, err error) {
 	return
 }
 
-// 杀死任务
+// 杀死任务 JOB_KILLER_DIR+name
 func (jobMgr *JobMgr) KillJob(name string) (err error) {
 	// 更新一下key= /cron/killer/任务名
 	var (

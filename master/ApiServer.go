@@ -3,6 +3,7 @@ package master
 import (
 	"encoding/json"
 	"go-crontab/common"
+	"go-crontab/logger"
 	"net"
 	"net/http"
 	"strconv"
@@ -50,7 +51,8 @@ func handleJobSave(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// 正常应答
+	logger.Infof("[保存任务]成功:%+v\n", job)
+	// 5,正常应答
 	common.ResponseErr(resp, 0, "success", oldJob)
 	return
 
@@ -64,22 +66,24 @@ func handleJobDelete(resp http.ResponseWriter, req *http.Request) {
 		name   string
 		oldJob *common.Job
 	)
-	// POST: a=1&b=2&c=3
+
+	// 1,解析POST表单 POST: a=1&b=2&c=3
 	if err = req.ParseForm(); err != nil {
 		common.ResponseErr(resp, -1, err.Error(), nil)
 		return
 	}
 
-	// 删除的任务名
+	// 2,删除的任务名
 	name = req.PostForm.Get("name")
 
-	// 去删除任务
+	// 3,去删除任务
 	if oldJob, err = G_jobMgr.DeleteJob(name); err != nil {
 		common.ResponseErr(resp, -1, err.Error(), nil)
 		return
 	}
 
-	// 正常应答
+	logger.Infof("[删除任务]成功:%+v\n", name)
+	// 4,正常应答
 	common.ResponseErr(resp, 0, "success", oldJob)
 	return
 }
@@ -97,30 +101,33 @@ func handleJobList(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	logger.Infof("[列举任务]成功:%d\n", len(jobList))
 	// 正常应答
 	common.ResponseErr(resp, 0, "success", jobList)
 	return
 }
 
 // 强制杀死某个任务
+// POST /job/kill name=job1
 func handleJobKill(resp http.ResponseWriter, req *http.Request) {
 	var (
-		err   error
-		name  string
-		bytes []byte
+		err  error
+		name string
 	)
 
-	// 解析POST表单
+	// 1,解析POST表单
 	if err = req.ParseForm(); err != nil {
 		common.ResponseErr(resp, -1, err.Error(), nil)
+		return
 	}
 
-	// 要杀死的任务名
+	// 2,要杀死的任务名
 	name = req.PostForm.Get("name")
 
-	// 杀死任务
+	// 3,杀死任务
 	if err = G_jobMgr.KillJob(name); err != nil {
 		common.ResponseErr(resp, -1, err.Error(), nil)
+		return
 	}
 
 	// 正常应答
@@ -138,15 +145,15 @@ func handleJobLog(resp http.ResponseWriter, req *http.Request) {
 		skip       int
 		limit      int
 		logArr     []*common.JobLog
-		bytes      []byte
 	)
 
-	// 解析Get参数
+	// 1,解析Get参数
 	if err = req.ParseForm(); err != nil {
 		common.ResponseErr(resp, -1, err.Error(), nil)
+		return
 	}
 
-	// 获取请求参数 /job/log?name=job10&skip=0&limit=10
+	// 2,获取请求参数 /job/log?name=job10&skip=0&limit=10
 	name = req.Form.Get("name")
 	skipParam = req.Form.Get("skip")
 	limitParam = req.Form.Get("limit")
@@ -159,6 +166,7 @@ func handleJobLog(resp http.ResponseWriter, req *http.Request) {
 
 	if logArr, err = G_logMgr.ListLog(name, skip, limit); err != nil {
 		common.ResponseErr(resp, -1, err.Error(), nil)
+		return
 	}
 
 	// 正常应答
@@ -171,11 +179,11 @@ func handleWorkerList(resp http.ResponseWriter, req *http.Request) {
 	var (
 		workerArr []string
 		err       error
-		bytes     []byte
 	)
 
 	if workerArr, err = G_workerMgr.ListWorkers(); err != nil {
 		common.ResponseErr(resp, -1, err.Error(), nil)
+		return
 	}
 
 	// 正常应答
@@ -227,27 +235,6 @@ func InitApiServer() (err error) {
 	}
 
 	// 启动服务端
-	go httpServer.Serve(listener)
-	// return
-
-	// 启动TCP监听
-	if listener, err = net.Listen("tcp", ":8070"); err != nil {
-		return
-	}
-
-	// 创建一个HTTP服务
-	httpServer = &http.Server{
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 5 * time.Second,
-		Handler:      mux,
-	}
-
-	// 赋值单例
-	G_apiServer = &ApiServer{
-		httpServer: httpServer,
-	}
-
-	// 启动了服务端
 	go httpServer.Serve(listener)
 	return
 }
