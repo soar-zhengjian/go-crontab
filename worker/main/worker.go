@@ -57,13 +57,13 @@ func main() {
 	// 输出config 结果
 	logger.Infof("%+v\n", worker.G_config)
 
-	// 服务注册
+	// 服务注册，注册本机IP到etcd，并不断续租
 	if err = worker.InitRegister(); err != nil {
 		common.FmtErr(err)
 		return
 	}
 
-	// 启动日志协程
+	// 启动日志协程, 被动接收信息，处理，保存
 	if err = worker.InitLogSink(); err != nil {
 		common.FmtErr(err)
 		return
@@ -87,7 +87,14 @@ func main() {
 		return
 	}
 
-	fmt.Println("worker服务开启成功\t")
+	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "worker服务开启成功\t")
+
+	go func() {
+		ticker := time.NewTicker(10 * time.Second)
+		for t := range ticker.C {
+			fmt.Println(t.Format("2006-01-02 15:04:05"), runtime.NumGoroutine())
+		}
+	}()
 	// 正常退出
 	for {
 		time.Sleep(1 * time.Second)
