@@ -62,13 +62,13 @@ func main() {
 		return
 	}
 
-	// 初始化日志管理器
+	// 初始化日志管理器, 提供方法给 /job/log接口
 	if err = master.InitLogMgr(); err != nil {
 		common.FmtErr(err)
 		return
 	}
 
-	// 初始化任务管理器
+	// 初始化任务管理器,提供方法给  /job/save+delete+list+kill接口
 	if err = master.InitJobMgr(); err != nil {
 		common.FmtErr(err)
 		return

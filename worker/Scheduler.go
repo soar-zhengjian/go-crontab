@@ -19,6 +19,20 @@ var (
 	G_scheduler *Scheduler
 )
 
+// 初始化调度
+func InitScheduler() (err error) {
+	G_scheduler = &Scheduler{
+		jobEventChan:      make(chan *common.JobEvent, 1000),
+		jobPlanTable:      make(map[string]*common.JobSchedulePlan),
+		jobExecutingTable: make(map[string]*common.JobExecuteInfo),
+		jobResultChan:     make(chan *common.JobExecuteResult, 1000),
+	}
+
+	// 启动调度协程
+	go G_scheduler.scheduleLoop()
+	return
+}
+
 // 处理任务事件
 func (scheduler *Scheduler) handleJobEvent(jobEvent *common.JobEvent) {
 	var (
@@ -35,6 +49,7 @@ func (scheduler *Scheduler) handleJobEvent(jobEvent *common.JobEvent) {
 		if jobSchedulePlan, err = common.BuildJobSchedulePlan(jobEvent.Job); err != nil {
 			return
 		}
+		logger.Info(jobEvent.Job.Name)
 		scheduler.jobPlanTable[jobEvent.Job.Name] = jobSchedulePlan
 	case common.JOB_EVENT_DELETE:
 		// 删除任务事件
@@ -88,6 +103,8 @@ func (scheduler *Scheduler) TrySchedule() (scheduleAfter time.Duration) {
 
 	// 如果任务表为空的话，随便睡眠多久
 	if len(scheduler.jobPlanTable) == 0 {
+		// todo 如果重启,没有任务, jobPlanTable为0
+		logger.Info("任务列表为空")
 		scheduleAfter = 1 * time.Second
 		return
 	}
@@ -140,7 +157,7 @@ func (scheduler *Scheduler) handleJobResult(result *common.JobExecuteResult) {
 		}
 		G_logSink.Append(jobLog)
 	}
-	logger.Info("任务执行完成:", result.ExecuteInfo.Job.Name, string(result.Output), result.Err)
+	logger.Info("任务执行完成:", result.ExecuteInfo.Job.Name)
 }
 
 // 调度协程
@@ -180,20 +197,6 @@ func (scheduler *Scheduler) scheduleLoop() {
 // 推送任务变化事件
 func (scheduler *Scheduler) PushJobEvent(jobEvent *common.JobEvent) {
 	scheduler.jobEventChan <- jobEvent
-}
-
-// 初始化调度
-func InitScheduler() (err error) {
-	G_scheduler = &Scheduler{
-		jobEventChan:      make(chan *common.JobEvent, 1000),
-		jobPlanTable:      make(map[string]*common.JobSchedulePlan),
-		jobExecutingTable: make(map[string]*common.JobExecuteInfo),
-		jobResultChan:     make(chan *common.JobExecuteResult, 1000),
-	}
-
-	// 启动调度协程
-	go G_scheduler.scheduleLoop()
-	return
 }
 
 // 回传任务执行结果

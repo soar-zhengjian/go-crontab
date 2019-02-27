@@ -57,7 +57,12 @@ func (logMgr *LogMgr) ListLog(name string, skip int, limit int) (logArr []*commo
 	logSort = &common.SortLogByStartTime{SortOrder: -1}
 
 	// 查询
-	if cursor, err = logMgr.logCollection.Find(context.TODO(), filter, findopt.Sort(logSort), findopt.Skip(int64(skip)), findopt.Limit(int64(limit))); err != nil {
+	if cursor, err = logMgr.logCollection.Find(
+		context.TODO(),
+		filter,
+		findopt.Sort(logSort),
+		findopt.Skip(int64(skip)),
+		findopt.Limit(int64(limit))); err != nil {
 		return
 	}
 
