@@ -1,12 +1,10 @@
 # go-crontab
 
-
-
 ## 运行
 ```
 cd $GOPATH/src
 git clone  xx.git
-cd xx 
+cd go-crontab
 cd master/main
 go run master.go
 
