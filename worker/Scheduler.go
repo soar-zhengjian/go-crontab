@@ -49,7 +49,6 @@ func (scheduler *Scheduler) handleJobEvent(jobEvent *common.JobEvent) {
 		if jobSchedulePlan, err = common.BuildJobSchedulePlan(jobEvent.Job); err != nil {
 			return
 		}
-		logger.Info(jobEvent.Job.Name)
 		scheduler.jobPlanTable[jobEvent.Job.Name] = jobSchedulePlan
 	case common.JOB_EVENT_DELETE:
 		// 删除任务事件
@@ -104,7 +103,6 @@ func (scheduler *Scheduler) TrySchedule() (scheduleAfter time.Duration) {
 	// 如果任务表为空的话，随便睡眠多久
 	if len(scheduler.jobPlanTable) == 0 {
 		// todo 如果重启,没有任务, jobPlanTable为0
-		logger.Info("任务列表为空")
 		scheduleAfter = 1 * time.Second
 		return
 	}

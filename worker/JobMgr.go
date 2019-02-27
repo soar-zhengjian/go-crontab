@@ -85,10 +85,9 @@ func (jobMgr *JobMgr) watchJobs() (err error) {
 	}
 
 	// 当前有哪些任务
-	logger.Info("当前任务:\t", len(getResp.Kvs))
 	for _, kvpair = range getResp.Kvs {
 		// 反序列化json得到Job
-		if job, err = common.UnpackJob(kvpair.Value); err != nil {
+		if job, err = common.UnpackJob(kvpair.Value); err == nil {
 			jobEvent = common.BuildJobEvent(common.JOB_EVENT_SAVE, job)
 			// 同步给scheduler(调度协程）
 			G_scheduler.PushJobEvent(jobEvent)
