@@ -74,15 +74,13 @@ func main() {
 		common.FmtErr(err)
 		return
 	}
-	
-	
-	
+
 	// 启动调度器
 	if err = worker.InitScheduler(); err != nil {
 		common.FmtErr(err)
 		return
 	}
-	
+
 	// 初始化任务管理器
 	if err = worker.InitJobMgr(); err != nil {
 		common.FmtErr(err)

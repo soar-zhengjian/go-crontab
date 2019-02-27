@@ -85,7 +85,7 @@ func (jobMgr *JobMgr) watchJobs() (err error) {
 	}
 
 	// 当前有哪些任务
-	logger.Info("当前任务:\t",len(getResp.Kvs))
+	logger.Info("当前任务:\t", len(getResp.Kvs))
 	for _, kvpair = range getResp.Kvs {
 		// 反序列化json得到Job
 		if job, err = common.UnpackJob(kvpair.Value); err != nil {
