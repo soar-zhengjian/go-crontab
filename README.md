@@ -1,6 +1,6 @@
 # go-crontab
 
-## 运行
+## 安装&运行
 ```
 cd $GOPATH/src
 git clone  xx.git
