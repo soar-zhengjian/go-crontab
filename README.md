@@ -1,7 +1,9 @@
 # go-crontab
 ```
-common  通用
-logger  日志
+doc
+prepare
+common  
+logger  
 master  master程序
 worker  worker程序
 ```
