@@ -59,11 +59,26 @@ type JobLog struct {
 	Command      string `bson:"command" json:"command"`           // 脚本命令
 	Err          string `bson:"err" json:"err"`                   // 错误原因
 	Output       string `bson:"output" json:"output"`             // 脚本输出
-	PlanTime     int64  `bson:"planTime" json:"planTime"`         // 计划开始时间
+	PlanTime     int64  `bson:"planTime" json:"planTime"`         // 计划开始时间，毫秒
 	ScheduleTime int64  `bson:"scheduleTime" json:"scheduleTime"` // 实际调度时间
 	StartTime    int64  `bson:"startTime" json:"startTime"`       // 任务执行开始时间
 	EndTime      int64  `bson:"endTime" json:"endTime"`           // 任务执行结束时间
 }
+
+/*
+JobLog存储示例
+{
+	"_id"           : ObjectId("5c74d043a266c80de1432b5e"),
+	"jobName"       : "test3",
+	"command"       : "echo \"3\"",
+	"err"           : "",
+	"output"        : "3\n",
+	"planTime"      : NumberLong(1551159362000),
+	"scheduleTime"  : NumberLong(1551159362000),
+	"startTime"     : NumberLong(1551159362498),
+	"endTime"       : NumberLong(1551159362711)
+}
+*/
 
 // 日志批次
 type LogBatch struct {
@@ -95,7 +110,7 @@ func BuildResponse(errno int, msg string, data interface{}) (resp []byte, err er
 	return
 }
 
-// 反序列化Job
+// 反序列化成Job
 func UnpackJob(value []byte) (ret *Job, err error) {
 	var (
 		job *Job

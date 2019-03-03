@@ -79,12 +79,13 @@ func main() {
 		common.FmtErr(err)
 		return
 	}
-	go func() {
-		ticker := time.NewTicker(10 * time.Second)
-		for t := range ticker.C {
-			fmt.Println(t.Format("2006-01-02 15:04:05"), runtime.NumGoroutine())
-		}
-	}()
+	// go func() {
+	// 	ticker := time.NewTicker(10 * time.Second)
+	// 	for t := range ticker.C {
+	// 		fmt.Println(t.Format("2006-01-02 15:04:05"), runtime.NumGoroutine())
+	// 	}
+	// }()
+
 	fmt.Println("master服务开启成功:\t", master.G_config.ApiPort)
 	// 正常退出
 	for {

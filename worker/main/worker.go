@@ -89,12 +89,13 @@ func main() {
 
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"), "worker服务开启成功\t")
 
-	go func() {
-		ticker := time.NewTicker(10 * time.Second)
-		for t := range ticker.C {
-			fmt.Println(t.Format("2006-01-02 15:04:05"), runtime.NumGoroutine())
-		}
-	}()
+	// go func() {
+	// 	ticker := time.NewTicker(10 * time.Second)
+	// 	for t := range ticker.C {
+	// 		fmt.Println(t.Format("2006-01-02 15:04:05"), runtime.NumGoroutine())
+	// 	}
+	// }()
+
 	// 正常退出
 	for {
 		time.Sleep(1 * time.Second)
